@@ -1,7 +1,7 @@
 function Pessoa(nome) {
   this.nome = nome;
   this.userSelected = function () {
-    console.log(`Usuário(a) selecionado: ${this.nome}`);
+    console.log(`Usuário(a): ${this.nome}`);
   };
 }
 
@@ -9,11 +9,12 @@ function Funcionario(nome, cargo, salario) {
   this.cargo = cargo;
   let _salario = salario;
 
+  // getters e setters
   this.getSalario = function () {
     if (_salario === undefined) {
       return `O salário ainda não foi atribuído.`;
     }
-    return `O salário de ${this.nome} é R$ ${_salario}`;
+    return _salario;
   };
 
   this.setSalario = function (valor) {
@@ -22,19 +23,46 @@ function Funcionario(nome, cargo, salario) {
     }
   };
 
+  Pessoa.call(this, nome);
+
   this.dizCargo = function () {
-    console.log(this.cargo);
+    return this.cargo;
   };
 
-  Pessoa.call(this, nome);
+  this.aumento = function () {
+    const novoSalario = _salario * 1.1;
+
+    _salario = novoSalario;
+  };
 }
 
-const funcionario1 = new Funcionario("Sara", "médico(a)", undefined);
+function Estagiario(nome) {
+  Funcionario.call(this, nome, "Estagiário", 2000); //herdando propriedades da função Funcionario
 
-funcionario1.userSelected();
-funcionario1.dizCargo();
+  this.aumento = function () {
+    const novoSalario = this.getSalario() * 1.07;
+    this.setSalario(novoSalario);
+  };
+}
 
-funcionario1.setSalario("cinquenta mil"); // não funciona
-// funcionario1.setSalario(undefined);
+function Gerente(nome) {
+  Funcionario.call(this, nome, "Gerente", 10000); //herdando propriedades da função Funcionario
 
+  this.aumento = function () {
+    const novoSalario = this.getSalario() * 1.15;
+    this.setSalario(novoSalario);
+  };
+}
+
+const funcionario1 = new Funcionario("Irineu", "eng. front-end", 5000);
+const funcionario2 = new Estagiario("Nemeu");
+const funcionario3 = new Gerente("Naosaby");
+
+funcionario1.aumento();
 console.log(funcionario1.getSalario());
+
+funcionario2.aumento();
+console.log(funcionario2.getSalario());
+
+funcionario3.aumento();
+console.log(funcionario3.getSalario());
